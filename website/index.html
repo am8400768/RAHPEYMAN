@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="رهپیمان؛ آموزش مهندسی از پایه تا اجرا"
+    />
+    <meta name="theme-color" content="#0d47a1" />
+    <title>رهپیمان | آموزش مهندسی</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <main id="auth-view" class="auth-layout">
+      <section class="auth-card" aria-labelledby="auth-title">
+        <div class="brand-mark">RP</div>
+        <p class="eyebrow">رهپیمان</p>
+        <h1 id="auth-title">آموزش مهندسی از پایه تا اجرا</h1>
+        <p class="muted">
+          برای ورود یا ثبت‌نام، شماره موبایل خود را وارد کنید.
+        </p>
+
+        <form id="phone-form" class="stack">
+          <label for="phone">شماره موبایل</label>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
+            placeholder="09123456789"
+            maxlength="16"
+            required
+          />
+          <button class="button primary" type="submit">
+            دریافت کد تأیید
+          </button>
+        </form>
+
+        <form id="otp-form" class="stack hidden">
+          <label for="otp">کد تأیید ارسال‌شده</label>
+          <input
+            id="otp"
+            name="otp"
+            type="text"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            placeholder="------"
+            maxlength="6"
+            required
+          />
+          <button class="button primary" type="submit">ورود به حساب</button>
+          <button id="change-phone" class="button ghost" type="button">
+            تغییر شماره
+          </button>
+        </form>
+
+        <p id="auth-status" class="form-status" aria-live="polite"></p>
+        <p class="fine-print">
+          با ورود، قوانین استفاده و سیاست حفظ حریم خصوصی رهپیمان را می‌پذیرید.
+        </p>
+      </section>
+    </main>
+
+    <div id="app-view" class="app-shell hidden">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <a class="brand" href="#courses" aria-label="صفحه اصلی رهپیمان">
+            <span class="brand-mark small">RP</span>
+            <span>
+              <strong>رهپیمان</strong>
+              <small>آموزش مهندسی</small>
+            </span>
+          </a>
+          <div class="account-actions">
+            <span id="user-phone" class="user-phone"></span>
+            <button id="logout-button" class="button ghost compact" type="button">
+              خروج
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <p class="eyebrow light">باشگاه مهندسان رهپیمان</p>
+          <h2>یاد بگیر، اجرا کن، حرفه‌ای‌تر شو.</h2>
+          <p>
+            دوره‌های کاربردی، ویدئوهای آموزشی و محتوای تخصصی را یکجا دنبال
+            کنید.
+          </p>
+        </div>
+        <button id="hero-payment" class="button light-button" type="button">
+          خرید یا تمدید اشتراک
+        </button>
+      </section>
+
+      <section id="courses" class="content-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">کتابخانه آموزش</p>
+            <h2>دوره‌های منتشرشده</h2>
+          </div>
+          <button id="refresh-courses" class="button ghost compact" type="button">
+            تازه‌سازی
+          </button>
+        </div>
+        <div id="account-status" class="subscription-banner"></div>
+        <div id="courses-grid" class="courses-grid" aria-live="polite"></div>
+      </section>
+
+      <footer class="footer">
+        <span>© رهپیمان</span>
+        <span>همراه مهندسین از آموزش تا اجرا</span>
+      </footer>
+    </div>
+
+    <div id="course-modal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">فهرست محتوا</p>
+            <h2 id="course-modal-title"></h2>
+          </div>
+          <button class="icon-button" data-close-modal="course-modal" type="button">
+            ×
+          </button>
+        </div>
+        <div id="videos-list" class="videos-list"></div>
+      </div>
+    </div>
+
+    <div id="video-modal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card video-modal-card">
+        <div class="modal-header">
+          <h2 id="video-modal-title"></h2>
+          <button class="icon-button" data-close-modal="video-modal" type="button">
+            ×
+          </button>
+        </div>
+        <video id="video-player" controls playsinline></video>
+        <p id="video-status" class="muted"></p>
+      </div>
+    </div>
+
+    <script src="./config.js"></script>
+    <script src="./app.js" defer></script>
+  </body>
+</html>

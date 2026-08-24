@@ -1,0 +1,36 @@
+# === Web Framework ===
+fastapi==0.115.0
+uvicorn[standard]==0.34.0
+
+# === Database ===
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+alembic==1.14.1
+
+# === Authentication & Security ===
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.20
+google-auth>=2.0.0
+
+# === Redis (برای ذخیره OTP) ===
+redis==5.2.0
+
+# === AWS S3 & CloudFront ===
+boto3==1.35.0
+
+# === Payment (ZarinPal) ===
+requests==2.32.3
+
+# === Environment Variables ===
+python-dotenv==1.0.1
+pydantic-settings==2.6.0
+
+# === SMS (Kavenegar) ===
+kavenegar==1.2.2
+
+# === CORS & Middleware ===
+httpx==0.28.0
+
+# === Logging & Monitoring ===
+structlog==24.4.0
