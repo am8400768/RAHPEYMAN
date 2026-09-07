@@ -2,6 +2,9 @@ name: Build APK
 
 on:
   workflow_dispatch:
+  push:
+    branches: ["arena/01a07a40-rahpeyman"]
+    paths: [".github/workflows/build-apk.yml"]
 
 jobs:
   apk:
