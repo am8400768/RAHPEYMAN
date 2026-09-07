@@ -37,10 +37,20 @@ jobs:
         run: flutter pub get
 
       - name: Build APK (release, per-ABI)
-        run: flutter build apk --release --split-per-abi --dart-define=API_BASE_URL=https://api.rahpeyman.ir
+        run: |
+          flutter build apk --release --split-per-abi --dart-define=API_BASE_URL=https://api.rahpeyman.ir 2>&1 | tee build.log
+          exit "${PIPESTATUS[0]}"
 
       - name: Show build output
-        run: ls -lh build/app/outputs/flutter-apk/
+        run: ls -lh build/app/outputs/flutter-apk/ || true
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rahpeyman-build-log
+          path: build.log
+          if-no-files-found: warn
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
