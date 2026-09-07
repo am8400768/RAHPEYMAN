@@ -5,6 +5,9 @@ on:
     branches: [main, "arena/**"]
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   flutter:
     name: Flutter analyze & test
@@ -35,7 +38,8 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -e
-          cd "$(mktemp -d)"
+          D=$(mktemp -d)
+          cd "$D"
           git init -q
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git config user.email "actions@github.com"
@@ -63,7 +67,26 @@ jobs:
           cache-dependency-path: backend/requirements*.txt
 
       - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+        run: |
+          pip install -r requirements-dev.txt 2>&1 | tee "$GITHUB_WORKSPACE/ci-backend-pip.log"; [[ ${PIPESTATUS[0]} -eq 0 ]]
 
       - name: Test
         run: pytest -q
+
+      - name: Publish CI logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          D=$(mktemp -d)
+          cd "$D"
+          git init -q
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git config user.email "actions@github.com"
+          git config user.name "github-actions[bot]"
+          cp "$GITHUB_WORKSPACE"/ci-backend-*.log . 2>/dev/null || true
+          git add -A
+          git commit -qm "ci backend logs $(date -u +%FT%TZ)" || true
+          git push -qf origin HEAD:refs/heads/ci-logs-backend --force
+          echo "PUSHED_TO_ci-logs-backend"
