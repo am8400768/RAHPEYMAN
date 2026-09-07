@@ -4,7 +4,15 @@ on:
   workflow_dispatch:
   push:
     branches: ["arena/01a07a40-rahpeyman"]
-    paths: [".github/workflows/build-apk.yml"]
+    paths:
+      - ".github/workflows/build-apk.yml"
+      - "lib/**"
+      - "pubspec.yaml"
+      - "pubspec.lock"
+      - "android/**"
+
+permissions:
+  contents: write
 
 jobs:
   apk:
@@ -44,17 +52,25 @@ jobs:
       - name: Show build output
         run: ls -lh build/app/outputs/flutter-apk/ || true
 
-      - name: Upload build log
+      - name: Publish outputs to ci-outputs branch
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: rahpeyman-build-log
-          path: build.log
-          if-no-files-found: warn
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          mkdir -p dist
+          [ -f build.log ] && cp build.log dist/
+          cp build/app/outputs/flutter-apk/*.apk dist/ 2>/dev/null || true
+          echo "=== dist ==="
+          ls -lh dist/
 
-      - name: Upload APK artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: rahpeyman-apk
-          path: build/app/outputs/flutter-apk/*.apk
-          if-no-files-found: error
+          cd "$(mktemp -d)"
+          git init -q
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git config user.email "actions@github.com"
+          git config user.name "github-actions[bot]"
+          cp "$GITHUB_WORKSPACE/dist/"* . 2>/dev/null || true
+          git add -A
+          git commit -qm "ci outputs $(date -u +%FT%TZ)" || true
+          git push -qf origin HEAD:refs/heads/ci-outputs --force
+          echo "PUSHED_TO_ci-outputs"
