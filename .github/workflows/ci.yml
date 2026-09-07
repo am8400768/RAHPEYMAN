@@ -22,10 +22,29 @@ jobs:
         run: flutter pub get
 
       - name: Analyze
-        run: flutter analyze
+        run: |
+          flutter analyze 2>&1 | tee ci-flutter-analyze.log; [[ ${PIPESTATUS[0]} -eq 0 ]]
 
       - name: Test
-        run: flutter test
+        run: |
+          flutter test 2>&1 | tee ci-flutter-test.log; [[ ${PIPESTATUS[0]} -eq 0 ]]
+
+      - name: Publish CI logs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          cd "$(mktemp -d)"
+          git init -q
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git config user.email "actions@github.com"
+          git config user.name "github-actions[bot]"
+          cp "$GITHUB_WORKSPACE"/ci-flutter-*.log . 2>/dev/null || true
+          git add -A
+          git commit -qm "ci logs $(date -u +%FT%TZ)" || true
+          git push -qf origin HEAD:refs/heads/ci-logs --force
+          echo "PUSHED_TO_ci-logs"
 
   backend:
     name: Backend tests
