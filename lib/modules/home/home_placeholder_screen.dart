@@ -327,7 +327,7 @@ class _HomeHeader extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: _HomePlaceholderScreenState.primaryBlue.withOpacity(0.25),
+            color: _HomePlaceholderScreenState.primaryBlue.withValues(alpha: 0.25),
             blurRadius: 16,
             offset: const Offset(0, 7),
           ),
@@ -363,7 +363,7 @@ class _HomeHeader extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: _HomePlaceholderScreenState.fontUi,
                     fontSize: 11.5,
-                    color: Colors.white.withOpacity(0.93),
+                    color: Colors.white.withValues(alpha: 0.93),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -401,7 +401,7 @@ class _SearchBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: _HomePlaceholderScreenState.primaryBlue.withOpacity(0.06),
+              color: _HomePlaceholderScreenState.primaryBlue.withValues(alpha: 0.06),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -449,11 +449,11 @@ class _ModuleCard extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: _HomePlaceholderScreenState.primaryBlue.withOpacity(0.06),
+            color: _HomePlaceholderScreenState.primaryBlue.withValues(alpha: 0.06),
           ),
           boxShadow: [
             BoxShadow(
-              color: _HomePlaceholderScreenState.primaryBlue.withOpacity(0.05),
+              color: _HomePlaceholderScreenState.primaryBlue.withValues(alpha: 0.05),
               blurRadius: 12,
               offset: const Offset(0, 5),
             ),
@@ -467,7 +467,7 @@ class _ModuleCard extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: _HomePlaceholderScreenState.primaryBlue.withOpacity(0.08),
+                color: _HomePlaceholderScreenState.primaryBlue.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -521,11 +521,11 @@ class _LatestAnnouncementCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: _HomePlaceholderScreenState.accentTeal.withOpacity(0.22),
+          color: _HomePlaceholderScreenState.accentTeal.withValues(alpha: 0.22),
         ),
         boxShadow: [
           BoxShadow(
-            color: _HomePlaceholderScreenState.primaryBlue.withOpacity(0.04),
+            color: _HomePlaceholderScreenState.primaryBlue.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -538,7 +538,7 @@ class _LatestAnnouncementCard extends StatelessWidget {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: _HomePlaceholderScreenState.accentTeal.withOpacity(0.12),
+              color: _HomePlaceholderScreenState.accentTeal.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(

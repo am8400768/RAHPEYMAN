@@ -200,10 +200,10 @@ class _EstefsariehHomeScreenState extends State<EstefsariehHomeScreen> {
                 height: 48,
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.96),
+                  color: Colors.white.withValues(alpha: 0.96),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.65),
+                    color: Colors.white.withValues(alpha: 0.65),
                   ),
                 ),
                 child: ClipRRect(
@@ -445,7 +445,7 @@ class _EstefsariehHomeScreenState extends State<EstefsariehHomeScreen> {
                       width: 34,
                       height: 34,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.92),
+                        color: Colors.white.withValues(alpha: 0.92),
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: _UiColors.skyBorder,

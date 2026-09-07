@@ -202,7 +202,7 @@ class _SharayetHomeScreenState extends State<SharayetHomeScreen> {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: SharayetColors.primary.withOpacity(0.08),
+                    color: SharayetColors.primary.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(

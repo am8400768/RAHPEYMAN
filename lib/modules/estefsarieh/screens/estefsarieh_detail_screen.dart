@@ -89,10 +89,10 @@ class EstefsariehDetailScreen extends StatelessWidget {
                       height: 50,
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.97),
+                        color: Colors.white.withValues(alpha: 0.97),
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.60),
+                          color: Colors.white.withValues(alpha: 0.60),
                         ),
                         boxShadow: const [
                           BoxShadow(
@@ -148,9 +148,9 @@ class EstefsariehDetailScreen extends StatelessWidget {
                           height: 42,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.14),
+                            color: Colors.white.withValues(alpha: 0.14),
                             border: Border.all(
-                              color: Colors.white.withOpacity(0.38),
+                              color: Colors.white.withValues(alpha: 0.38),
                               width: 1,
                             ),
                             boxShadow: const [

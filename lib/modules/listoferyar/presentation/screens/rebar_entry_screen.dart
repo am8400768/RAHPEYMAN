@@ -262,12 +262,6 @@ class _ListoferyarRebarEntryScreenState
     return totalLength * roundedUnitWeight;
   }
 
-  void _refresh() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
   Future<void> _saveRows() async {
     if (_saving) return;
 
@@ -505,26 +499,6 @@ class _ListoferyarRebarEntryScreenState
     values.sort();
 
     return values;
-  }
-
-  List<int> _descendantIds(
-    int rootId,
-  ) {
-    final List<int> result = <int>[];
-
-    void visit(int parentId) {
-      for (final node in _nodes) {
-        if (node.parentId == parentId &&
-            node.id != null) {
-          result.add(node.id!);
-          visit(node.id!);
-        }
-      }
-    }
-
-    visit(rootId);
-
-    return result;
   }
 
   Widget _buildSummary() {

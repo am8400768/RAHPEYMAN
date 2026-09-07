@@ -91,10 +91,10 @@ class _StartupScreenState extends State<StartupScreen>
                       width: 104,
                       height: 104,
                       decoration: BoxDecoration(
-                        color: AppTheme.primary.withOpacity(0.08),
+                        color: AppTheme.primary.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(28),
                         border: Border.all(
-                          color: AppTheme.primary.withOpacity(0.14),
+                          color: AppTheme.primary.withValues(alpha: 0.14),
                         ),
                       ),
                       child: const Center(

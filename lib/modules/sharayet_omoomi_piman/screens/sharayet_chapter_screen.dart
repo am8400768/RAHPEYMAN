@@ -225,7 +225,7 @@ class _SharayetChapterScreenState extends State<SharayetChapterScreen> {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: SharayetColors.primary.withOpacity(0.08),
+              color: SharayetColors.primary.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(
@@ -320,7 +320,7 @@ class _SharayetChapterScreenState extends State<SharayetChapterScreen> {
                       ),
                       decoration: BoxDecoration(
                         color:
-                            SharayetColors.primary.withOpacity(0.08),
+                            SharayetColors.primary.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
