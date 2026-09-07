@@ -33,8 +33,28 @@ migrate_working_dir/
 /build/
 /coverage/
 
-# Backend secrets
+# Backend secrets & local artifacts
 backend/.env
+.env
+*.db
+*.sqlite
+venv/
+.venv/
+**/venv/
+**/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Android signing (never commit real keystores/secrets)
+key.properties
+*.jks
+*.keystore
+android/local.properties
+android/app/debug/
+android/app/profile/
+android/app/release/
 
 # Symbolication related
 app.*.symbols
@@ -42,7 +62,6 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# Flutter generated
+.flutter-plugins
+flutter_export_environment.sh

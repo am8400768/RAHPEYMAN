@@ -29,7 +29,6 @@ flutter:
 
   assets:
     - assets/data/sharayet_omoomi_piman.sql
-    - assets/data/estefsarieh_data.json
     - assets/data/estefsarieh_data.sqlite
     - assets/data/pipes.db
     - assets/data/bricks.sql

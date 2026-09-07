@@ -1,4 +1,6 @@
-﻿<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Required: the app talks to the Rahpeyman API in all build types -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="رهپیمان"
         android:name="${applicationName}"

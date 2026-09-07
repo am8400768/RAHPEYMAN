@@ -3,8 +3,18 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Load release signing config from android/key.properties if it exists.
+// Create the file from key.properties.example and NEVER commit it (see .gitignore).
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withReader { reader ->
+        keystoreProperties.load(reader)
+    }
+}
+
 android {
-    namespace = "com.example.final_listofer"
+    namespace = "ir.rahpeyman.app"
 
     compileSdk = 36
 
@@ -18,7 +28,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.final_listofer"
+        applicationId = "ir.rahpeyman.app"
 
         minSdk = flutter.minSdkVersion
 
@@ -29,9 +39,24 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (keystorePropertiesFile.exists()) {
+            release {
+                keyAlias = keystoreProperties["keyAlias"]
+                keyPassword = keystoreProperties["keyPassword"]
+                storeFile = file(keystoreProperties["storeFile"])
+                storePassword = keystoreProperties["storePassword"]
+            }
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("debug")
+            // Use the real release keystore when key.properties exists,
+            // otherwise fall back to debug signing so local builds still work.
+            signingConfig = keystorePropertiesFile.exists()
+                ? signingConfigs.getByName("release")
+                : signingConfigs.getByName("debug")
         }
     }
 }

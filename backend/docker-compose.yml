@@ -1,4 +1,37 @@
 services:
+  api:
+    build: .
+    container_name: rahpeyman-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://rahpeyman:rahpeyman@db:5432/rahpeyman
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "8000:8000"
+
+  db:
+    image: postgres:16-alpine
+    container_name: rahpeyman-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rahpeyman
+      POSTGRES_PASSWORD: rahpeyman
+      POSTGRES_DB: rahpeyman
+    volumes:
+      - rahpeyman_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rahpeyman -d rahpeyman"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   redis:
     image: redis:7-alpine
     container_name: rahpeyman-redis
@@ -10,4 +43,5 @@ services:
     command: redis-server --appendonly yes
 
 volumes:
+  rahpeyman_pg_data:
   rahpeyman_redis_data:

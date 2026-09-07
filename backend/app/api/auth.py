@@ -1,7 +1,7 @@
+import redis.asyncio as redis
 from datetime import datetime
 from typing import Literal
 
-import redis.asyncio as redis
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
@@ -16,8 +16,9 @@ from app.services.sms_service import send_otp_sms
 
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
+
 redis_client = redis.from_url(
-    "redis://localhost:6379",
+    settings.REDIS_URL,
     decode_responses=True,
 )
 
@@ -44,23 +45,39 @@ class OtpVerification(BaseModel):
     attestation_key_id: str | None = Field(default=None, max_length=255)
 
 
+def _redis_unavailable(exc: Exception) -> HTTPException:
+    return HTTPException(
+        status_code=503,
+        detail="سرویس تأیید موقتاً در دسترس نیست؛ دوباره تلاش کنید",
+    )
+
+
 @router.post("/request-otp")
 async def request_otp(payload: OtpRequest):
     phone = AuthService.normalize_phone(payload.phone)
     rate_key = f"otp-rate:{phone}"
-    requests_in_window = await redis_client.incr(rate_key)
-    if requests_in_window == 1:
-        await redis_client.expire(rate_key, 600)
-    if requests_in_window > 5:
-        raise HTTPException(
-            status_code=429,
-            detail="تعداد درخواست‌ها زیاد است؛ بعداً دوباره تلاش کنید",
-        )
+    try:
+        requests_in_window = await redis_client.incr(rate_key)
+        if requests_in_window == 1:
+            await redis_client.expire(rate_key, 600)
+        if requests_in_window > 5:
+            raise HTTPException(
+                status_code=429,
+                detail="تعداد درخواست‌ها زیاد است؛ بعداً دوباره تلاش کنید",
+            )
 
-    otp = AuthService.generate_otp()
-    await redis_client.setex(f"otp:{phone}", 120, otp)
-    await redis_client.delete(f"otp-attempts:{phone}")
-    send_otp_sms(phone, otp)
+        otp = AuthService.generate_otp()
+        await redis_client.setex(f"otp:{phone}", 120, otp)
+        await redis_client.delete(f"otp-attempts:{phone}")
+    except redis.RedisError as exc:
+        raise _redis_unavailable(exc) from exc
+
+    # Sending is best-effort: a failed SMS must not look like success.
+    if not send_otp_sms(phone, otp):
+        raise HTTPException(
+            status_code=502,
+            detail="ارسال پیامک ناموفق بود؛ دوباره تلاش کنید",
+        )
     return {"message": "کد تأیید ارسال شد"}
 
 
@@ -71,15 +88,20 @@ async def verify_otp(
     db: Session = Depends(get_db),
 ):
     phone = AuthService.normalize_phone(payload.phone)
-    stored = await redis_client.get(f"otp:{phone}")
+    try:
+        stored = await redis_client.get(f"otp:{phone}")
+    except redis.RedisError as exc:
+        raise _redis_unavailable(exc) from exc
 
     if stored is None or stored != payload.otp:
-        attempts_key = f"otp-attempts:{phone}"
-        attempts = await redis_client.incr(attempts_key)
-        if attempts == 1:
-            await redis_client.expire(attempts_key, 120)
-        if attempts >= 5:
-            await redis_client.delete(f"otp:{phone}")
+        try:
+            attempts = await redis_client.incr(f"otp-attempts:{phone}")
+            if attempts == 1:
+                await redis_client.expire(f"otp-attempts:{phone}", 120)
+            if attempts >= 5:
+                await redis_client.delete(f"otp:{phone}")
+        except redis.RedisError as exc:
+            raise _redis_unavailable(exc) from exc
         raise HTTPException(
             status_code=429 if attempts >= 5 else 400,
             detail=(
@@ -125,7 +147,12 @@ async def verify_otp(
             detail="تأیید اصالت دستگاه برای ثبت‌نام الزامی است",
         )
 
-    await redis_client.delete(f"otp:{phone}")
+    try:
+        await redis_client.delete(f"otp:{phone}")
+    except redis.RedisError:
+        # A failed cleanup must not block a successful login.
+        pass
+
     client_ip = request.client.host if request.client else "unknown"
     user_agent = request.headers.get("user-agent")
     user = AuthService.register_user(
